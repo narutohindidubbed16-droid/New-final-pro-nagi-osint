@@ -6,10 +6,12 @@ import os
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-# Channel IDs (must be negative integer IDs)
-MAIN_CHANNEL = int(os.getenv("MAIN_CHANNEL"))
-BACKUP_CHANNEL = int(os.getenv("BACKUP_CHANNEL"))
-PRIVATE_CHANNEL = int(os.getenv("PRIVATE_CHANNEL"))
+# Public channels (username OR channel ID both allowed)
+MAIN_CHANNEL = os.getenv("MAIN_CHANNEL")          # e.g. @MyMainChannel
+BACKUP_CHANNEL = os.getenv("BACKUP_CHANNEL")      # e.g. @MyBackupChannel
+
+# Private channel (no join check)
+PRIVATE_CHANNEL = os.getenv("PRIVATE_CHANNEL")    # e.g. https://t.me/+abcde12345
 
 # API URLs
 MOBILE_API = os.getenv("MOBILE_API")
