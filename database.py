@@ -1,88 +1,103 @@
-# ==========================================
-# 📌 MongoDB Database Handler (With Referral System)
-# ==========================================
+# ============================
+# 📦 SIMPLE JSON DATABASE
+# ============================
 
-from pymongo import MongoClient
-from config import MONGO_URL, DB_NAME
-from datetime import datetime
+import json
+import os
+from config import START_CREDITS
 
-# -----------------------------
-# Connect Database
-# -----------------------------
-client = MongoClient(MONGO_URL)
-db = client[DB_NAME]
+DB_FILE = "database.json"
 
-users = db["users"]
+# ------------------------------
+# Load Database
+# ------------------------------
+def load_db():
+    if not os.path.exists(DB_FILE):
+        with open(DB_FILE, "w") as f:
+            f.write("{}")
+    with open(DB_FILE, "r") as f:
+        return json.load(f)
 
-# -----------------------------
-# Create User
-# -----------------------------
-def create_user(user_id, username, name, referrer=None):
-    user = users.find_one({"user_id": user_id})
-    if not user:
-        data = {
-            "user_id": user_id,
+# ------------------------------
+# Save Database
+# ------------------------------
+def save_db(db):
+    with open(DB_FILE, "w") as f:
+        json.dump(db, f, indent=4)
+
+# ------------------------------
+# Create New User
+# ------------------------------
+def create_user(user_id, username, name):
+    db = load_db()
+
+    if str(user_id) not in db:
+        db[str(user_id)] = {
             "username": username,
             "name": name,
-            "credits": 10,
-            "referrer": referrer,
-            "referrals": 0,
-            "joined": datetime.now()
+            "credits": START_CREDITS,
+            "referrals": []
         }
-        users.insert_one(data)
+        save_db(db)
         return True
     return False
 
-
-# -----------------------------
-# Add Referral to Referrer
-# -----------------------------
-def add_referral(referrer_id):
-    users.update_one(
-        {"user_id": referrer_id},
-        {"$inc": {"referrals": 1, "credits": 1}}  # Earn 1 credit per referral
-    )
-
-
-# -----------------------------
+# ------------------------------
 # Get Credits
-# -----------------------------
-def get_credits(user_id):
-    user = users.find_one({"user_id": user_id})
-    if not user:
-        return 0
-    return user.get("credits", 0)
+# ------------------------------
+def get_user_credits(user_id):
+    db = load_db()
+    return db.get(str(user_id), {}).get("credits", 0)
 
-
-# -----------------------------
+# ------------------------------
 # Decrease Credit
-# -----------------------------
-def decrease_credit(user_id, amount=1):
-    users.update_one(
-        {"user_id": user_id},
-        {"$inc": {"credits": -amount}}
-    )
+# ------------------------------
+def decrease_credit(user_id):
+    db = load_db()
+    if str(user_id) in db:
+        db[str(user_id)]["credits"] -= 1
+        if db[str(user_id)]["credits"] < 0:
+            db[str(user_id)]["credits"] = 0
+        save_db(db)
 
+# ------------------------------
+# Add Referral
+# ------------------------------
+def add_referral(referrer_id, user_id):
+    db = load_db()
+    if str(referrer_id) in db:
+        if user_id not in db[str(referrer_id)]["referrals"]:
+            db[str(referrer_id)]["referrals"].append(user_id)
+            db[str(referrer_id)]["credits"] += 1
+            save_db(db)
 
-# -----------------------------
-# Add Credit (Admin)
-# -----------------------------
-def add_credit(user_id, amount):
-    users.update_one(
-        {"user_id": user_id},
-        {"$inc": {"credits": amount}}
-    )
+# ------------------------------
+# Admin: Add Credits
+# ------------------------------
+def admin_add_credits(user_id, amount):
+    db = load_db()
+    if str(user_id) in db:
+        db[str(user_id)]["credits"] += amount
+        save_db(db)
+        return True
+    return False
 
+# ------------------------------
+# Admin: Remove Credits
+# ------------------------------
+def admin_remove_credits(user_id, amount):
+    db = load_db()
+    if str(user_id) in db:
+        db[str(user_id)]["credits"] -= amount
+        if db[str(user_id)]["credits"] < 0:
+            db[str(user_id)]["credits"] = 0
+        save_db(db)
+        return True
+    return False
 
-# -----------------------------
-# Total Users
-# -----------------------------
-def total_users():
-    return users.count_documents({})
-
-
-# -----------------------------
-# Get All Users
-# -----------------------------
+# ------------------------------
+# Admin: List all users
+# ------------------------------
 def get_all_users():
-    return users.find({})
+    db = load_db()
+    return db
