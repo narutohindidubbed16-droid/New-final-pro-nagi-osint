@@ -1,3 +1,6 @@
-python-telegram-bot==20.7
-aiohttp
+python-telegram-bot==21.6
+aiohttp==3.9.1
 pytz
+certifi
+httpx
+async-timeout==4.0.3
