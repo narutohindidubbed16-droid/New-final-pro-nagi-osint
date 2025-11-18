@@ -1,70 +1,25 @@
-# ==========================================
-# ⚙️ config.py — Nagi OSINT PRO
-# ==========================================
+# ============================
+# 🔧 CONFIG SETTINGS (ENV BASED)
+# ============================
 
 import os
 
-# ------------------------------------------
-# BOT CREDENTIALS
-# ------------------------------------------
-BOT_TOKEN = os.getenv("BOT_TOKEN")              # your bot token
-BOT_USERNAME = os.getenv("BOT_USERNAME")        # example: NaGIOsintProBot
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-# ------------------------------------------
-# CHANNELS
-# ------------------------------------------
-MAIN_CHANNEL = os.getenv("MAIN_CHANNEL")        # @YourMainChannel
-BACKUP_CHANNEL = os.getenv("BACKUP_CHANNEL")    # @YourBackupChannel
-PRIVATE_CHANNEL = os.getenv("PRIVATE_CHANNEL")  # @YourPrivateChannel (NO JOIN CHECK)
+# Channel IDs (must be negative integer IDs)
+MAIN_CHANNEL = int(os.getenv("MAIN_CHANNEL"))
+BACKUP_CHANNEL = int(os.getenv("BACKUP_CHANNEL"))
+PRIVATE_CHANNEL = int(os.getenv("PRIVATE_CHANNEL"))
 
-# ------------------------------------------
-# REFERRAL + CREDITS
-# ------------------------------------------
-START_CREDITS = int(os.getenv("START_CREDITS", 5))
+# API URLs
+MOBILE_API = os.getenv("MOBILE_API")
+GST_API = os.getenv("GST_API")
+IFSC_API = os.getenv("IFSC_API")
+PINCODE_API = os.getenv("PINCODE_API")
+VEHICLE_API = os.getenv("VEHICLE_API")
 
-# ------------------------------------------
-# DATABASE (MongoDB)
-# ------------------------------------------
-MONGO_URI = os.getenv("MONGO_URI")
+# Admin
+ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
 
-# ------------------------------------------
-# API ENDPOINTS (LIVE WORKING)
-# ------------------------------------------
-MOBILE_API  = os.getenv("MOBILE_API",  "https://ph-ng-pi.vercel.app/?number=")
-PINCODE_API = os.getenv("PINCODE_API", "https://pincode-ng.vercel.app/lookup?pincode=")
-RC_API      = os.getenv("RC_API",      "https://vvvin-ng.vercel.app/lookup?rc=")
-IMEI_API    = os.getenv("IMEI_API",    "https://ng-imei-info.vercel.app/?imei_num=")
-
-# Future Tools (Not available)
-GST_API = ""
-IFSC_API = ""
-
-# ------------------------------------------
-# COMING SOON LIST (UI MENU)
-# ------------------------------------------
-COMING_SOON_LIST = [
-    "Aadhaar OSINT",
-    "PAN OSINT",
-    "Passport Lookup",
-    "Email OSINT",
-    "Voter ID Details",
-]
-
-# ------------------------------------------
-# OWNER / SUPPORT
-# ------------------------------------------
-OWNER_USER = os.getenv("OWNER_USER", "@AbdulBotz")
-SUPPORT_LINK = "https://t.me/" + OWNER_USER.replace("@", "")
-
-# ------------------------------------------
-# UI TEXTS
-# ------------------------------------------
-WELCOME_TEXT = """
-✨ *Welcome to Nagi OSINT PRO* ✨
-
-⚡ Advanced Multi-Search  
-🔍 Mobile • IMEI • Vehicle • Pincode  
-🎁 Earn credits using referral  
-"""
-
-ERROR_TEXT = "⚠️ Something went wrong. Please try again later."
+# Default starting credits
+START_CREDITS = int(os.getenv("START_CREDITS", "5"))
