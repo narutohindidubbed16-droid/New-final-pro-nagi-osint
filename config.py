@@ -5,6 +5,7 @@
 import os
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_USERNAME = os.getenv("BOT_USERNAME")
 
 # Public channels (username OR channel ID both allowed)
 MAIN_CHANNEL = os.getenv("MAIN_CHANNEL")          # e.g. @MyMainChannel
