@@ -19,7 +19,8 @@ MOBILE_API = os.getenv("MOBILE_API")
 GST_API = os.getenv("GST_API")
 IFSC_API = os.getenv("IFSC_API")
 PINCODE_API = os.getenv("PINCODE_API")
-VEHICLE_API = os.getenv("VEHICLE_API")
+RC_API = os.getenv("RC_API")
+IMEI_API = os.getnv("IMEI_API")
 
 # Admin
 ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
